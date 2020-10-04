@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Set;
 
+import com.scaler.cloneSplitWise.models.ConsolidatedExpenseData;
 import com.scaler.cloneSplitWise.models.Expense;
 import com.scaler.cloneSplitWise.models.PaySplit;
 
@@ -20,11 +21,11 @@ public class ExpenseService {
 	GroupService groupService;
 	private int idsUsed = 0;
 
-	public ExpenseService(UserService userService, GroupService groupService) {
+	public ExpenseService(UserService userService, GroupService groupService, ConsolidatedExpenseData data) {
 		this.userService = userService;
 		this.groupService = groupService;
-		creditMap = new HashMap<>();
-		debitMap = new HashMap<>();
+		creditMap = data.getCreditMap();
+		debitMap = data.getDebitMap();
 		expenses = new ArrayList<>();
 	}
 
@@ -104,31 +105,5 @@ public class ExpenseService {
 		addExpense(lenders, debits, expnseName);
 	}
 
-	public void printReport(int userId) throws Exception {
-		System.out.println("****** Credits ******");
-		if (creditMap.containsKey(userId)) {
-			Map<Integer, Double> debitors = creditMap.get(userId);
-			String lenderName = userService.findUser(userId).getUserName();
-			for (Integer eachBorrower : debitors.keySet()) {
-				String borrowerName = userService.findUser(eachBorrower).getUserName();
-				System.out.println(borrowerName + " owes " + lenderName + " Rs." + debitors.get(eachBorrower));
-			}
-		}
-		System.out.println("****** Debits ******");
-		if (debitMap.containsKey(userId)) {
-			Map<Integer, Double> debitors = debitMap.get(userId);
-			String borrowerName = userService.findUser(userId).getUserName();
-			for (Integer eachLender : debitors.keySet()) {
-				String lenderName = userService.findUser(eachLender).getUserName();
-				System.out.println(borrowerName + " owes " + lenderName + " Rs." + debitors.get(eachLender));
-			}
-		}
-	}
-
-	public void printOverallReport() throws Exception {
-		for (Integer eachUser : userService.getAllUserIds()) {
-			printReport(eachUser);
-			System.out.println("#######################################################");
-		}
-	}
+	
 }

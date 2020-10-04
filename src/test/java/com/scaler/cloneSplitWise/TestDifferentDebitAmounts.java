@@ -24,7 +24,7 @@ public class TestDifferentDebitAmounts {
 		splits.add(new PaySplit(3, 40));
 		
 		app.getExpenseService().addExpense(splits, borrowers, "Restaurant bill");
-		app.getExpenseService().printReport(2);
+		app.getReportService().printReport(2);
 		
 	}
 	
@@ -44,7 +44,7 @@ public class TestDifferentDebitAmounts {
 		splits.add(new PaySplit(3, 40));
 		
 		app.getExpenseService().addExpense(splits, borrowers, "Restaurant bill");
-		app.getExpenseService().printReport(1);
+		app.getReportService().printReport(1);
 		
 	}
 }

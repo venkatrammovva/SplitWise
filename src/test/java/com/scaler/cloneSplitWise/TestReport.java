@@ -29,9 +29,9 @@ public class TestReport {
 		splits.add(split2);
 		
 		app.getExpenseService().addExpense(splits, borrowers, "Restaurant bill");
-		app.getExpenseService().printReport(1);
+		app.getReportService().printReport(1);
 		System.out.println("#######################################################");
-		app.getExpenseService().printReport(3);
+		app.getReportService().printReport(3);
 		
 	}
 	
@@ -51,11 +51,11 @@ public class TestReport {
 		splits.add(new PaySplit(3, 20));
 		
 		app.getExpenseService().addExpense(splits, borrowers, "Restaurant bill");
-		app.getExpenseService().printReport(1);
+		app.getReportService().printReport(1);
 		System.out.println("#######################################################");
-		app.getExpenseService().printReport(2);
+		app.getReportService().printReport(2);
 		System.out.println("#######################################################");
-		app.getExpenseService().printReport(3);
+		app.getReportService().printReport(3);
 		
 	}
 	
@@ -76,11 +76,11 @@ public class TestReport {
 		splits.add(new PaySplit(3, 20));
 		
 		app.getExpenseService().addExpense(splits, borrowers, "Restaurant bill");
-		app.getExpenseService().printReport(1);
+		app.getReportService().printReport(1);
 		System.out.println("#######################################################");
-		app.getExpenseService().printReport(2);
+		app.getReportService().printReport(2);
 		System.out.println("#######################################################");
-		app.getExpenseService().printReport(3);
+		app.getReportService().printReport(3);
 		
 	}
 	@Test
@@ -104,11 +104,11 @@ public class TestReport {
 		splits.add(split2);
 		
 		app.getExpenseService().addExpense(splits, 1, "Restaurant bill");
-		app.getExpenseService().printReport(1);
+		app.getReportService().printReport(1);
 		System.out.println("#######################################################");
-		app.getExpenseService().printReport(2);
+		app.getReportService().printReport(2);
 		System.out.println("#######################################################");
-		app.getExpenseService().printReport(3);
+		app.getReportService().printReport(3);
 		
 	}
 	
@@ -139,7 +139,7 @@ public class TestReport {
 		splits1.add(split2_1);
 		splits1.add(split1_1);
 		app.getExpenseService().addExpense(splits1, 1, "Restaurant bill next week");
-		app.getExpenseService().printOverallReport();
+		app.getReportService().printOverallReport();
 		
 	}
 }
