@@ -6,9 +6,9 @@ public class Expense {
 	private int id;
 	private String expenseName;
 	private Set<PaySplit> creditors;
-	private Set<Integer> debitors;
+	private Set<PaySplit> debitors;
 	
-	public Expense(int id, String expenseName, Set<PaySplit> creditors, Set<Integer> debitors) {
+	public Expense(int id, String expenseName, Set<PaySplit> creditors, Set<PaySplit> debitors) {
 		this.id = id;
 		this.expenseName = expenseName;
 		this.creditors = creditors;
@@ -32,10 +32,10 @@ public class Expense {
 	public void setCreditors(Set<PaySplit> creditors) {
 		this.creditors = creditors;
 	}
-	public Set<Integer> getDebitors() {
+	public Set<PaySplit> getDebitors() {
 		return debitors;
 	}
-	public void setDebitors(Set<Integer> debitors) {
+	public void setDebitors(Set<PaySplit> debitors) {
 		this.debitors = debitors;
 	}
 	

@@ -28,36 +28,37 @@ public class ExpenseService {
 		expenses = new ArrayList<>();
 	}
 
-	public void addExpense(Set<PaySplit> lenders, Set<Integer> debitors, String expnseName) {
-		double totalAmount = 0;
-		for (PaySplit eachPaySplit : lenders) {
-			totalAmount += eachPaySplit.getAmount();
-		}
-		double costPerPerson = totalAmount / debitors.size();
+	public void addExpense(Set<PaySplit> lenders, Set<PaySplit> debitors, String expnseName) {
 		Comparator<PaySplit> comp = (a, b) -> new Double(b.getAmount() - a.getAmount()).intValue();
 		PriorityQueue<PaySplit> queue = new PriorityQueue<>(comp);
+		Map<Integer, Double> debits = new HashMap<>();
+		for (PaySplit eachDebit : debitors) {
+			debits.put(eachDebit.getUserId(), debits.getOrDefault(eachDebit.getUserId(), 0.0) + eachDebit.getAmount());
+		}
 		HashMap<Integer, Double> toPayAmount = new HashMap<>();
 		for (PaySplit eachPaySplit : lenders) {
-			if (debitors.contains(eachPaySplit.getUserId()) && eachPaySplit.getAmount() < costPerPerson) {
-				double amountRemaining = costPerPerson - eachPaySplit.getAmount();
+			double amountOwed = debits.getOrDefault(eachPaySplit.getUserId(), 0.0);
+			if (debits.containsKey(eachPaySplit.getUserId()) && eachPaySplit.getAmount() < amountOwed) {
+				double amountRemaining = amountOwed - eachPaySplit.getAmount();
 				toPayAmount.put(eachPaySplit.getUserId(), amountRemaining);
-			} else if (debitors.contains(eachPaySplit.getUserId())) {
-				eachPaySplit.setAmount(eachPaySplit.getAmount() - costPerPerson);
+			} else if (debits.containsKey(eachPaySplit.getUserId())) {
+				eachPaySplit.setAmount(eachPaySplit.getAmount() - amountOwed);
 				queue.add(eachPaySplit);
-				debitors.remove(eachPaySplit.getUserId());
+				debits.remove(eachPaySplit.getUserId());
 			} else {
 				queue.add(eachPaySplit);
 			}
 		}
-		updateBalances(debitors, costPerPerson, queue, toPayAmount);
+		updateBalances(debits, queue, toPayAmount);
 		Expense exp = new Expense(++idsUsed, expnseName, lenders, debitors);
 		expenses.add(exp);
 	}
 
-	private void updateBalances(Set<Integer> debitors, double costPerPerson, PriorityQueue<PaySplit> queue,
-			HashMap<Integer, Double> toPayAmount) {
-		for (Integer eachDebitor : debitors) {
-			double borrowedAmount = toPayAmount.containsKey(eachDebitor) ? toPayAmount.get(eachDebitor) : costPerPerson;
+	private void updateBalances(Map<Integer, Double> borrowedAmounts,
+			PriorityQueue<PaySplit> queue, HashMap<Integer, Double> toPayAmount) {
+		for (Integer eachDebitor : borrowedAmounts.keySet()) {
+			double borrowedAmount = toPayAmount.containsKey(eachDebitor) ? toPayAmount.get(eachDebitor)
+					: borrowedAmounts.get(eachDebitor);
 			if (!debitMap.containsKey(eachDebitor)) {
 				debitMap.put(eachDebitor, new HashMap<>());
 			}
@@ -90,12 +91,21 @@ public class ExpenseService {
 			}
 
 		}
-		Set<Integer> debitors = new HashSet<>();
-		debitors.addAll(groupService.findGroup(groupId).getMembers());
-		addExpense(lenders, debitors, expnseName);
+		double amount = 0;
+		for(PaySplit eachPaySplit : lenders) {
+			amount += eachPaySplit.getAmount();
+		}
+		Set<Integer> debitors = groupService.findGroup(groupId).getMembers();
+		double amountPerPerson = amount / debitors.size();
+		Set<PaySplit> debits = new HashSet<>();
+		for(Integer eachDebitor : debitors) {
+			debits.add(new PaySplit(eachDebitor, amountPerPerson));
+		}
+		addExpense(lenders, debits, expnseName);
 	}
 
 	public void printReport(int userId) throws Exception {
+		System.out.println("****** Credits ******");
 		if (creditMap.containsKey(userId)) {
 			Map<Integer, Double> debitors = creditMap.get(userId);
 			String lenderName = userService.findUser(userId).getUserName();
@@ -104,6 +114,7 @@ public class ExpenseService {
 				System.out.println(borrowerName + " owes " + lenderName + " Rs." + debitors.get(eachBorrower));
 			}
 		}
+		System.out.println("****** Debits ******");
 		if (debitMap.containsKey(userId)) {
 			Map<Integer, Double> debitors = debitMap.get(userId);
 			String borrowerName = userService.findUser(userId).getUserName();

@@ -16,11 +16,11 @@ public class TestReport {
 		app.getUserService().addUser("bhav");
 		app.getUserService().addUser("kiriti");
 		app.getUserService().addUser("karthik");
-		Set<Integer> borrowers = new HashSet<>();
-		borrowers.add(2);
-		borrowers.add(1);
-		borrowers.add(3);
-		borrowers.add(4);
+		Set<PaySplit> borrowers = new HashSet<>();
+		borrowers.add(new PaySplit(2, 25));
+		borrowers.add(new PaySplit(1,25));
+		borrowers.add(new PaySplit(3,25));
+		borrowers.add(new PaySplit(4,25));
 		
 		PaySplit split1 = new PaySplit(1, 60);
 		PaySplit split2 = new PaySplit(3, 40);
@@ -42,15 +42,13 @@ public class TestReport {
 		app.getUserService().addUser("bhav");
 		app.getUserService().addUser("abc");
 		
-		Set<Integer> borrowers = new HashSet<>();
-		borrowers.add(2);
-		borrowers.add(1);
+		Set<PaySplit> borrowers = new HashSet<>();
+		borrowers.add(new PaySplit(2,60));
+		borrowers.add(new PaySplit(1,60));
 		
-		PaySplit split1 = new PaySplit(1, 100);
-		PaySplit split2 = new PaySplit(3, 20);
 		Set<PaySplit> splits= new HashSet<>();
-		splits.add(split1);
-		splits.add(split2);
+		splits.add(new PaySplit(1, 100));
+		splits.add(new PaySplit(3, 20));
 		
 		app.getExpenseService().addExpense(splits, borrowers, "Restaurant bill");
 		app.getExpenseService().printReport(1);
@@ -68,16 +66,14 @@ public class TestReport {
 		app.getUserService().addUser("bhav");
 		app.getUserService().addUser("abc");
 		
-		Set<Integer> borrowers = new HashSet<>();
-		borrowers.add(2);
-		borrowers.add(1);
-		borrowers.add(3);
+		Set<PaySplit> borrowers = new HashSet<>();
+		borrowers.add(new PaySplit(2,40));
+		borrowers.add(new PaySplit(1, 40));
+		borrowers.add(new PaySplit(3, 40));
 		
-		PaySplit split1 = new PaySplit(1, 100);
-		PaySplit split2 = new PaySplit(3, 20);
 		Set<PaySplit> splits= new HashSet<>();
-		splits.add(split1);
-		splits.add(split2);
+		splits.add(new PaySplit(1, 100));
+		splits.add(new PaySplit(3, 20));
 		
 		app.getExpenseService().addExpense(splits, borrowers, "Restaurant bill");
 		app.getExpenseService().printReport(1);
